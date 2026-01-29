@@ -1,155 +1,182 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Junbo Huang - Portfolio</title>
-  <meta name="description" content="Personal Website of Junbo Huang - M.S. Computer Science candidate focused on machine learning and LLM systems">
+  <title>Junbo Huang</title>
   <meta name="author" content="Junbo Huang">
+  <meta name="copyright" content="© 2026 Junbo Huang. All rights reserved.">
+  <meta name="description" content="Personal Website of Junbo Huang">
 
   <!-- Fonts -->
-  <link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@300;500;700&family=Work+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css?family=Google+Sans|Noto+Sans|Castoro" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Playfair+Display&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@300;500;700&family=Work+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
 
   <!-- Font Awesome -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
+  <!-- TagCanvas for 3D Word Cloud -->
+  <script src="https://www.goat1000.com/tagcanvas.min.js"></script>
+
   <link rel="stylesheet" href="assets/style.css">
+
+  <style>
+    /* Prevent navbar dropdown arrow */
+    .navbar.is-primary .navbar-end .navbar-link::after,
+    .navbar.is-primary .navbar-start .navbar-link::after {
+      content: none !important;
+      border: none !important;
+    }
+  </style>
 </head>
+
 <body>
 
-  <!-- Background Container -->
-  <div id="background-container" class="bg-container">
+  <div id="background-container">
 
     <!-- Navigation Bar -->
-    <nav class="navbar">
+    <nav class="navbar is-primary">
       <div class="navbar-brand">
-        <a class="navbar-logo" href="#home">
-          <span class="logo-text">JH</span>
+        <a class="navbar-item" href="#" id="navbar-home" onclick="goHome()">
+          <strong id="navbar-title">Home</strong>
         </a>
-        <button class="theme-toggle-btn" id="themeToggle" title="Toggle Dark Mode">
+
+        <!-- Dark Mode Toggle -->
+        <a class="navbar-item dark-mode-toggle-mobile" href="#" id="dark-mode-toggle-mobile" title="Toggle Dark Mode">
           <i class="fas fa-moon"></i>
-        </button>
-        <button class="navbar-burger" id="navbarBurger">
-          <span></span>
-          <span></span>
-          <span></span>
-        </button>
+        </a>
+
+        <!-- Hamburger Menu -->
+        <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="top-navbar">
+          <span aria-hidden="true"></span>
+          <span aria-hidden="true"></span>
+          <span aria-hidden="true"></span>
+        </a>
       </div>
-      <div class="navbar-menu" id="navbarMenu">
-        <a href="#education">Education</a>
-        <a href="#experience">Experience</a>
-        <a href="#contact">Contact</a>
+
+      <div id="top-navbar" class="navbar-menu">
+        <div class="navbar-end">
+          <a class="navbar-item" href="#about">About</a>
+          <a class="navbar-item" href="#education">Education</a>
+          <a class="navbar-item" href="#experience">Experience</a>
+          <a class="navbar-item" href="#contact">Contact</a>
+        </div>
       </div>
     </nav>
 
-    <!-- Hero Section -->
-    <div class="hero-section">
-      <div class="hero-grid">
+    <!-- Hero Section with 3 Columns -->
+    <div class="container has-text-centered hero-container">
+      <div class="hero-three-column">
 
-        <!-- Left: Cards Carousel -->
-        <div class="hero-column">
-          <div class="cards-carousel">
-            <div class="card-wrapper">
-              <div class="info-card active">
-                <div class="card-icon"><i class="fas fa-code"></i></div>
-                <h3>Machine Learning</h3>
-                <p>LLM-based systems and recommendation algorithms</p>
-              </div>
-              <div class="info-card">
-                <div class="card-icon"><i class="fas fa-robot"></i></div>
-                <h3>AI Agents</h3>
-                <p>Multi-agent orchestration and RAG pipelines</p>
-              </div>
-              <div class="info-card">
-                <div class="card-icon"><i class="fas fa-brain"></i></div>
-                <h3>Deep Learning</h3>
-                <p>Neural networks and model optimization</p>
-              </div>
-              <div class="info-card">
-                <div class="card-icon"><i class="fas fa-chart-line"></i></div>
-                <h3>Data Science</h3>
-                <p>Statistical analysis and data visualization</p>
-              </div>
-              <div class="info-card">
-                <div class="card-icon"><i class="fas fa-project-diagram"></i></div>
-                <h3>System Design</h3>
-                <p>Scalable architecture and optimization</p>
-              </div>
+        <!-- Left Column: Card Carousel -->
+        <div class="hero-col">
+          <div class="card-container">
+            <div class="card active-card">
+              <div class="card-icon"><i class="fas fa-code"></i></div>
+              <div class="card-title">Machine Learning</div>
+              <div class="card-description">LLM-based systems and recommendation algorithms</div>
             </div>
-            <button class="carousel-btn prev-btn" id="prevCard">
-              <i class="fas fa-chevron-left"></i>
+            <div class="card">
+              <div class="card-icon"><i class="fas fa-robot"></i></div>
+              <div class="card-title">AI Agents</div>
+              <div class="card-description">Multi-agent orchestration and RAG pipelines</div>
+            </div>
+            <div class="card">
+              <div class="card-icon"><i class="fas fa-brain"></i></div>
+              <div class="card-title">Deep Learning</div>
+              <div class="card-description">Neural networks and model optimization</div>
+            </div>
+            <div class="card">
+              <div class="card-icon"><i class="fas fa-chart-line"></i></div>
+              <div class="card-title">Data Science</div>
+              <div class="card-description">Statistical analysis and data visualization</div>
+            </div>
+            <div class="card">
+              <div class="card-icon"><i class="fas fa-project-diagram"></i></div>
+              <div class="card-title">System Design</div>
+              <div class="card-description">Scalable architecture and optimization</div>
+            </div>
+
+            <!-- Arrow Buttons -->
+            <button class="arrow-btn arrow-left" id="prev-btn">
+              <i class="fas fa-arrow-left"></i>
             </button>
-            <button class="carousel-btn next-btn" id="nextCard">
-              <i class="fas fa-chevron-right"></i>
+            <button class="arrow-btn arrow-right" id="next-btn">
+              <i class="fas fa-arrow-right"></i>
             </button>
-            <div class="carousel-dots" id="carouselDots"></div>
           </div>
         </div>
 
-        <!-- Center: Profile Photo -->
-        <div class="hero-column center">
-          <div class="profile-container">
-            <div class="profile-image-wrapper">
-              <img src="assets/photo.jpg" alt="Junbo Huang" class="profile-image">
-              <div class="profile-ring"></div>
-            </div>
-            <h1 class="main-title">Junbo Huang</h1>
-            <p class="main-subtitle">Dream Big, Work Hard, Stay Humble</p>
-            <p class="tagline">Be Versatile, Be Great</p>
-            <div class="social-icons">
-              <a href="https://github.com/hjb001" target="_blank" title="GitHub">
-                <i class="fab fa-github"></i>
-              </a>
-              <a href="https://www.linkedin.com/in/junbo-huang-690b08301/" target="_blank" title="LinkedIn">
-                <i class="fab fa-linkedin"></i>
-              </a>
-              <a href="https://scholar.google.com/" target="_blank" title="Google Scholar">
-                <i class="fas fa-graduation-cap"></i>
-              </a>
-              <a href="mailto:junbohuang80@gmail.com" title="Email">
-                <i class="fas fa-envelope"></i>
-              </a>
-            </div>
+        <!-- Center Column: Profile Photo -->
+        <div class="hero-col center-col">
+          <figure class="image is-128x128 is-inline-block profile-figure">
+            <img class="is-rounded" src="assets/photo.jpg" alt="Junbo Huang">
+          </figure>
+          <h1 class="title is-size-3-tablet is-size-4-mobile main-name">
+            Junbo Huang
+          </h1>
+          <h2 class="title is-size-3-tablet is-size-4-mobile main-title">
+            Dream Big, Work Hard, Stay Humble.
+          </h2>
+          <p class="subtitle is-size-4-tablet is-size-5-mobile main-subtitle">
+            ——Be Versatile, Be Great.
+          </p>
+          <div class="icon-box">
+            <a href="https://github.com/hjb001" target="_blank" title="GitHub">
+              <i class="fab fa-github"></i>
+            </a>
+            <a href="https://scholar.google.com/" target="_blank" title="Google Scholar">
+              <i class="fas fa-graduation-cap"></i>
+            </a>
+            <a href="https://www.linkedin.com/in/junbo-huang-690b08301/" target="_blank" title="LinkedIn">
+              <i class="fab fa-linkedin"></i>
+            </a>
+            <a href="mailto:junbohuang80@gmail.com" title="Email">
+              <i class="fas fa-envelope"></i>
+            </a>
           </div>
         </div>
 
-        <!-- Right: Word Cloud -->
-        <div class="hero-column">
-          <div class="word-cloud-container">
-            <div class="word-cloud">
-              <span class="cloud-word" style="font-size: 2em; top: 10%; left: 20%;">Python</span>
-              <span class="cloud-word" style="font-size: 1.5em; top: 25%; left: 60%;">TensorFlow</span>
-              <span class="cloud-word" style="font-size: 1.8em; top: 40%; left: 15%;">PyTorch</span>
-              <span class="cloud-word" style="font-size: 1.3em; top: 55%; left: 70%;">LLM</span>
-              <span class="cloud-word" style="font-size: 1.6em; top: 70%; left: 30%;">Machine Learning</span>
-              <span class="cloud-word" style="font-size: 1.4em; top: 20%; left: 45%;">RAG</span>
-              <span class="cloud-word" style="font-size: 1.7em; top: 50%; left: 50%;">Deep Learning</span>
-              <span class="cloud-word" style="font-size: 1.2em; top: 35%; left: 80%;">NLP</span>
-              <span class="cloud-word" style="font-size: 1.5em; top: 65%; left: 10%;">Agents</span>
-              <span class="cloud-word" style="font-size: 1.3em; top: 80%; left: 60%;">Recommendation</span>
-            </div>
+        <!-- Right Column: Word Cloud -->
+        <div class="hero-col">
+          <div id="canvas-container">
+            <canvas id="word-cloud" width="400" height="300"></canvas>
+            <ul id="tags">
+              <li><a href="#" title="Python">Python</a></li>
+              <li><a href="#" title="TensorFlow">TensorFlow</a></li>
+              <li><a href="#" title="PyTorch">PyTorch</a></li>
+              <li><a href="#" title="LLM">LLM</a></li>
+              <li><a href="#" title="Machine Learning">Machine Learning</a></li>
+              <li><a href="#" title="RAG">RAG</a></li>
+              <li><a href="#" title="Deep Learning">Deep Learning</a></li>
+              <li><a href="#" title="NLP">NLP</a></li>
+              <li><a href="#" title="AI Agents">AI Agents</a></li>
+              <li><a href="#" title="Recommendation">Recommendation</a></li>
+            </ul>
           </div>
         </div>
 
       </div>
     </div>
-
   </div>
 
-  <!-- Main Content -->
-  <main class="main-content">
+  <!-- Main Content Sections -->
+  <div id="meta-sections-root">
 
     <!-- About Section -->
-    <section id="about" class="content-section">
-      <div class="container">
-        <h2 class="section-title">About Me</h2>
-        <div class="about-content">
-          <p>
+    <section class="section">
+      <div class="container is-max-desktop">
+        <div id="about">
+          <h1 class="title is-3 section-title" id="about-title">About Me</h1>
+        </div>
+        <div id="about-texts" class="about-texts">
+          <p class="text-homepage-1">
             I'm a M.S. Computer Science candidate at UC San Diego, focusing on machine learning and large language model systems.
             My research interests include recommendation systems, AI agents, and applied ML for real-world products.
           </p>
-          <p>
+          <p class="text-homepage-1">
             Currently working on LLM-based intent detection, RAG pipelines, and multi-agent orchestration systems.
             I'm passionate about building intelligent systems that can understand and serve users better.
           </p>
@@ -158,30 +185,20 @@
     </section>
 
     <!-- Education Section -->
-    <section id="education" class="content-section">
-      <div class="container">
-        <h2 class="section-title">Education</h2>
-        <div class="timeline">
-          <div class="timeline-item">
-            <div class="timeline-marker"></div>
-            <div class="timeline-content">
-              <div class="timeline-header">
-                <h3>University of California San Diego</h3>
-                <span class="timeline-date">Sep 2024 – Jun 2026</span>
-              </div>
-              <p class="timeline-subtitle">M.S. in Computer Science</p>
-              <p class="timeline-detail">GPA: 4.0/4.0 · San Diego, CA</p>
+    <section class="section">
+      <div class="container is-max-desktop">
+        <div id="education">
+          <h1 class="title is-3 section-title" id="education-title">Education</h1>
+          <div class="about-texts">
+            <div class="section-text-block">
+              <p class="text-homepage-1"><strong>University of California San Diego</strong> · Sep 2024 – Jun 2026</p>
+              <p class="text-homepage-1">M.S. in Computer Science (GPA: 4.0/4.0)</p>
+              <p class="text-homepage-1">San Diego, CA</p>
             </div>
-          </div>
-          <div class="timeline-item">
-            <div class="timeline-marker"></div>
-            <div class="timeline-content">
-              <div class="timeline-header">
-                <h3>UESTC</h3>
-                <span class="timeline-date">Sep 2020 – Jul 2024</span>
-              </div>
-              <p class="timeline-subtitle">B.Eng. in Computer Science and Technology</p>
-              <p class="timeline-detail">GPA: 3.93/4.0 · Chengdu, China</p>
+            <div class="section-text-block">
+              <p class="text-homepage-1"><strong>UESTC</strong> · Sep 2020 – Jul 2024</p>
+              <p class="text-homepage-1">B.Eng. in Computer Science and Technology (GPA: 3.93/4.0)</p>
+              <p class="text-homepage-1">Chengdu, China</p>
             </div>
           </div>
         </div>
@@ -189,32 +206,20 @@
     </section>
 
     <!-- Experience Section -->
-    <section id="experience" class="content-section">
-      <div class="container">
-        <h2 class="section-title">Internship Experience</h2>
-        <div class="experience-grid">
-          <div class="experience-card">
-            <div class="experience-header">
-              <div class="company-badge">Alibaba Cloud</div>
-              <div class="experience-period">May 2025 – Sep 2025</div>
+    <section class="section">
+      <div class="container is-max-desktop">
+        <div id="experience">
+          <h1 class="title is-3 section-title" id="experience-title">Internship Experience</h1>
+          <div class="about-texts">
+            <div class="section-text-block">
+              <p class="text-homepage-1"><strong>Applied Machine Learning Engineer Intern</strong></p>
+              <p class="text-homepage-1">Alibaba Cloud · Beijing, China · May 2025 – Sep 2025</p>
+              <p class="text-homepage-1">Intent recognition and NL2Workflow multi-agent assistant pipelines.</p>
             </div>
-            <h3>Applied Machine Learning Engineer Intern</h3>
-            <p>Intent recognition and NL2Workflow multi-agent assistant pipelines</p>
-            <div class="experience-location">
-              <i class="fas fa-map-marker-alt"></i>
-              Beijing, China
-            </div>
-          </div>
-          <div class="experience-card">
-            <div class="experience-header">
-              <div class="company-badge">MeiTuan</div>
-              <div class="experience-period">Dec 2024 – Apr 2025</div>
-            </div>
-            <h3>Machine Learning Engineering Intern</h3>
-            <p>Recommendation strategy optimization and multi-task ranking models</p>
-            <div class="experience-location">
-              <i class="fas fa-map-marker-alt"></i>
-              Beijing, China
+            <div class="section-text-block">
+              <p class="text-homepage-1"><strong>Machine Learning Engineering Intern</strong></p>
+              <p class="text-homepage-1">MeiTuan · Beijing, China · Dec 2024 – Apr 2025</p>
+              <p class="text-homepage-1">Recommendation strategy optimization and multi-task ranking models.</p>
             </div>
           </div>
         </div>
@@ -222,49 +227,44 @@
     </section>
 
     <!-- Contact Section -->
-    <section id="contact" class="content-section">
-      <div class="container">
-        <h2 class="section-title">Contact</h2>
-        <div class="contact-grid">
-          <div class="contact-card">
-            <div class="contact-icon">
-              <i class="fas fa-envelope"></i>
+    <section class="section">
+      <div class="container is-max-desktop">
+        <div id="contact">
+          <h1 class="title is-3 section-title" id="contact-title">Contact</h1>
+          <div class="about-texts">
+            <div class="section-text-block">
+              <p class="text-homepage-1"><strong>Email:</strong> junbohuang80@gmail.com</p>
+              <p class="text-homepage-1"><strong>LinkedIn:</strong> <a href="https://www.linkedin.com/in/junbo-huang-690b08301/" target="_blank">junbo-huang</a></p>
+              <p class="text-homepage-1"><strong>GitHub:</strong> <a href="https://github.com/hjb001" target="_blank">hjb001</a></p>
             </div>
-            <h3>Email</h3>
-            <p><a href="mailto:junbohuang80@gmail.com">junbohuang80@gmail.com</a></p>
-          </div>
-          <div class="contact-card">
-            <div class="contact-icon">
-              <i class="fab fa-linkedin"></i>
-            </div>
-            <h3>LinkedIn</h3>
-            <p><a href="https://www.linkedin.com/in/junbo-huang-690b08301/" target="_blank">junbo-huang</a></p>
-          </div>
-          <div class="contact-card">
-            <div class="contact-icon">
-              <i class="fab fa-github"></i>
-            </div>
-            <h3>GitHub</h3>
-            <p><a href="https://github.com/hjb001" target="_blank">hjb001</a></p>
           </div>
         </div>
       </div>
     </section>
 
-  </main>
+  </div>
 
   <!-- Footer -->
   <footer class="footer">
     <div class="container">
-      <p>© 2026 Junbo Huang · Build something with intent</p>
+      <div class="columns is-centered">
+        <div class="column">
+          <div class="content has-text-centered">
+            <p id="footer-text">© 2026 Junbo Huang. All rights reserved.</p>
+          </div>
+        </div>
+      </div>
     </div>
   </footer>
 
   <!-- Back to Top Button -->
-  <button id="backToTop" class="back-to-top" title="Back to top">
+  <button id="back-to-top" class="back-to-top" title="Back to top">
     <i class="fas fa-chevron-up"></i>
   </button>
 
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
   <script src="assets/script.js"></script>
+
 </body>
+
 </html>

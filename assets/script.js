@@ -1,111 +1,109 @@
-// ==========================================
-// Dark Mode Toggle
-// ==========================================
+// ===================================
+// Global Functions
+// ===================================
 
-const themeToggle = document.getElementById('themeToggle');
+function goHome() {
+  window.scrollTo({
+    top: 0,
+    behavior: 'smooth'
+  });
+}
+
+// ===================================
+// Dark Mode Toggle
+// ===================================
+
+const darkModeToggle = document.getElementById('dark-mode-toggle-mobile');
 const body = document.body;
-const themeIcon = themeToggle.querySelector('i');
 
 // Load saved theme
 const savedTheme = localStorage.getItem('theme');
 if (savedTheme === 'dark') {
   body.classList.add('dark-mode');
-  themeIcon.classList.replace('fa-moon', 'fa-sun');
+  if (darkModeToggle) {
+    darkModeToggle.querySelector('i').classList.replace('fa-moon', 'fa-sun');
+  }
 }
 
 // Toggle theme
-themeToggle.addEventListener('click', () => {
-  body.classList.toggle('dark-mode');
+if (darkModeToggle) {
+  darkModeToggle.addEventListener('click', (e) => {
+    e.preventDefault();
+    body.classList.toggle('dark-mode');
 
-  if (body.classList.contains('dark-mode')) {
-    localStorage.setItem('theme', 'dark');
-    themeIcon.classList.replace('fa-moon', 'fa-sun');
-  } else {
-    localStorage.removeItem('theme');
-    themeIcon.classList.replace('fa-sun', 'fa-moon');
-  }
-});
+    const icon = darkModeToggle.querySelector('i');
+    if (body.classList.contains('dark-mode')) {
+      localStorage.setItem('theme', 'dark');
+      icon.classList.replace('fa-moon', 'fa-sun');
+    } else {
+      localStorage.removeItem('theme');
+      icon.classList.replace('fa-sun', 'fa-moon');
+    }
 
-// ==========================================
+    // Restart word cloud with new theme
+    setTimeout(initWordCloud, 300);
+  });
+}
+
+// ===================================
 // Mobile Navigation
-// ==========================================
+// ===================================
 
-const navbarBurger = document.getElementById('navbarBurger');
-const navbarMenu = document.getElementById('navbarMenu');
+document.addEventListener('DOMContentLoaded', () => {
+  // Get all "navbar-burger" elements
+  const $navbarBurgers = Array.prototype.slice.call(document.querySelectorAll('.navbar-burger'), 0);
 
-navbarBurger.addEventListener('click', () => {
-  navbarMenu.classList.toggle('active');
+  // Add a click event on each of them
+  $navbarBurgers.forEach(el => {
+    el.addEventListener('click', () => {
+      // Get the target from the "data-target" attribute
+      const target = el.dataset.target;
+      const $target = document.getElementById(target);
 
-  // Animate burger icon
-  const spans = navbarBurger.querySelectorAll('span');
-  if (navbarMenu.classList.contains('active')) {
-    spans[0].style.transform = 'rotate(45deg) translate(5px, 5px)';
-    spans[1].style.opacity = '0';
-    spans[2].style.transform = 'rotate(-45deg) translate(7px, -6px)';
-  } else {
-    spans.forEach(span => {
-      span.style.transform = '';
-      span.style.opacity = '';
+      // Toggle the "is-active" class on both the "navbar-burger" and the "navbar-menu"
+      el.classList.toggle('is-active');
+      $target.classList.toggle('is-active');
     });
-  }
-});
+  });
 
-// Close menu when clicking a link
-navbarMenu.querySelectorAll('a').forEach(link => {
-  link.addEventListener('click', () => {
-    navbarMenu.classList.remove('active');
-    const spans = navbarBurger.querySelectorAll('span');
-    spans.forEach(span => {
-      span.style.transform = '';
-      span.style.opacity = '';
+  // Close mobile menu when clicking a link
+  const navbarLinks = document.querySelectorAll('.navbar-menu a');
+  navbarLinks.forEach(link => {
+    link.addEventListener('click', () => {
+      const burger = document.querySelector('.navbar-burger');
+      const menu = document.querySelector('.navbar-menu');
+      if (burger && menu) {
+        burger.classList.remove('is-active');
+        menu.classList.remove('is-active');
+      }
     });
   });
 });
 
-// ==========================================
-// Cards Carousel
-// ==========================================
+// ===================================
+// Card Carousel
+// ===================================
 
-const cards = document.querySelectorAll('.info-card');
-const prevBtn = document.getElementById('prevCard');
-const nextBtn = document.getElementById('nextCard');
-const dotsContainer = document.getElementById('carouselDots');
-let currentCard = 0;
+let currentCardIndex = 0;
+const cards = document.querySelectorAll('.card-container .card');
+const prevBtn = document.getElementById('prev-btn');
+const nextBtn = document.getElementById('next-btn');
 let autoPlayInterval;
 
-// Create dots
-cards.forEach((_, index) => {
-  const dot = document.createElement('div');
-  dot.classList.add('carousel-dot');
-  if (index === 0) dot.classList.add('active');
-  dot.addEventListener('click', () => goToCard(index));
-  dotsContainer.appendChild(dot);
-});
-
-const dots = document.querySelectorAll('.carousel-dot');
-
 function showCard(index) {
-  cards.forEach(card => card.classList.remove('active'));
-  dots.forEach(dot => dot.classList.remove('active'));
-
-  cards[index].classList.add('active');
-  dots[index].classList.add('active');
-  currentCard = index;
+  cards.forEach(card => card.classList.remove('active-card'));
+  cards[index].classList.add('active-card');
+  currentCardIndex = index;
 }
 
 function nextCard() {
-  const next = (currentCard + 1) % cards.length;
+  const next = (currentCardIndex + 1) % cards.length;
   showCard(next);
 }
 
 function prevCard() {
-  const prev = (currentCard - 1 + cards.length) % cards.length;
+  const prev = (currentCardIndex - 1 + cards.length) % cards.length;
   showCard(prev);
-}
-
-function goToCard(index) {
-  showCard(index);
-  resetAutoPlay();
 }
 
 function startAutoPlay() {
@@ -121,54 +119,161 @@ function resetAutoPlay() {
   startAutoPlay();
 }
 
-// Event listeners
-nextBtn.addEventListener('click', () => {
-  nextCard();
-  resetAutoPlay();
-});
-
-prevBtn.addEventListener('click', () => {
-  prevCard();
-  resetAutoPlay();
-});
-
-// Start autoplay
-startAutoPlay();
-
-// Pause on hover
-const cardsCarousel = document.querySelector('.cards-carousel');
-cardsCarousel.addEventListener('mouseenter', stopAutoPlay);
-cardsCarousel.addEventListener('mouseleave', startAutoPlay);
-
-// ==========================================
-// Back to Top Button
-// ==========================================
-
-const backToTop = document.getElementById('backToTop');
-
-window.addEventListener('scroll', () => {
-  if (window.scrollY > 300) {
-    backToTop.classList.add('visible');
-  } else {
-    backToTop.classList.remove('visible');
-  }
-});
-
-backToTop.addEventListener('click', () => {
-  window.scrollTo({
-    top: 0,
-    behavior: 'smooth'
+if (prevBtn && nextBtn) {
+  prevBtn.addEventListener('click', () => {
+    prevCard();
+    resetAutoPlay();
   });
+
+  nextBtn.addEventListener('click', () => {
+    nextCard();
+    resetAutoPlay();
+  });
+
+  // Start autoplay
+  startAutoPlay();
+
+  // Pause on hover
+  const cardContainer = document.querySelector('.card-container');
+  if (cardContainer) {
+    cardContainer.addEventListener('mouseenter', stopAutoPlay);
+    cardContainer.addEventListener('mouseleave', startAutoPlay);
+  }
+
+  // Keyboard navigation
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowLeft') {
+      prevCard();
+      resetAutoPlay();
+    } else if (e.key === 'ArrowRight') {
+      nextCard();
+      resetAutoPlay();
+    }
+  });
+}
+
+// ===================================
+// TagCanvas 3D Word Cloud
+// ===================================
+
+function initWordCloud() {
+  if (typeof TagCanvas === 'undefined') {
+    console.warn('TagCanvas library not loaded');
+    return;
+  }
+
+  try {
+    const isDarkMode = body.classList.contains('dark-mode');
+    const textColor = isDarkMode ? '#e0e0e0' : '#FFFFFF';
+    const outlineColor = isDarkMode ? 'rgba(224, 224, 224, 0.5)' : 'rgba(255, 255, 255, 0.5)';
+
+    TagCanvas.Start('word-cloud', 'tags', {
+      textColour: textColor,
+      outlineColour: outlineColor,
+      reverse: true,
+      depth: 0.8,
+      maxSpeed: 0.03,
+      textFont: 'Work Sans, sans-serif',
+      textHeight: 20,
+      shuffleTags: true,
+      initial: [0.1, -0.1],
+      decel: 0.98,
+      dragControl: true,
+      weight: true,
+      weightMode: 'size',
+      weightSize: 1,
+      weightSizeMin: 15,
+      weightSizeMax: 30,
+      shape: 'sphere',
+      tooltip: 'native',
+      tooltipDelay: 0,
+      zoom: 0.9,
+      noMouse: false
+    });
+
+    // Auto-restart word cloud rotation
+    setupWordCloudAutoRestart();
+  } catch (e) {
+    console.error('TagCanvas initialization error:', e);
+  }
+}
+
+function setupWordCloudAutoRestart() {
+  const canvas = document.getElementById('word-cloud');
+  if (!canvas) return;
+
+  let restartTimer = null;
+  let isUserInteracting = false;
+  let lastInteractionTime = Date.now();
+
+  canvas.addEventListener('mousedown', () => {
+    isUserInteracting = true;
+    lastInteractionTime = Date.now();
+    if (restartTimer) clearTimeout(restartTimer);
+  });
+
+  document.addEventListener('mouseup', () => {
+    if (isUserInteracting) {
+      isUserInteracting = false;
+      lastInteractionTime = Date.now();
+
+      if (restartTimer) clearTimeout(restartTimer);
+
+      restartTimer = setTimeout(() => {
+        const timeSinceLastInteraction = Date.now() - lastInteractionTime;
+        if (timeSinceLastInteraction >= 3000 && !isUserInteracting) {
+          startWordCloudRotation();
+        }
+      }, 3000);
+    }
+  });
+
+  canvas.addEventListener('mousemove', () => {
+    if (isUserInteracting) {
+      lastInteractionTime = Date.now();
+    }
+  });
+}
+
+function startWordCloudRotation() {
+  if (typeof TagCanvas === 'undefined') return;
+
+  try {
+    const canvas = document.getElementById('word-cloud');
+    if (canvas && canvas.tc) {
+      canvas.tc.animating = true;
+      canvas.tc.active = true;
+
+      if (canvas.tc.taglist && canvas.tc.taglist.length > 0) {
+        canvas.tc.taglist.forEach(tag => {
+          tag.vx = (Math.random() - 0.5) * 0.02;
+          tag.vy = (Math.random() - 0.5) * 0.02;
+        });
+      }
+
+      if (canvas.tc.Draw) {
+        canvas.tc.Draw();
+      }
+    }
+  } catch (e) {
+    console.error('Error restarting word cloud rotation:', e);
+  }
+}
+
+// Initialize word cloud when page loads
+window.addEventListener('load', () => {
+  setTimeout(initWordCloud, 300);
 });
 
-// ==========================================
-// Smooth Scroll for Anchor Links
-// ==========================================
+// ===================================
+// Smooth Scroll
+// ===================================
 
 document.querySelectorAll('a[href^="#"]').forEach(anchor => {
   anchor.addEventListener('click', function (e) {
     const href = this.getAttribute('href');
-    if (href === '#' || href === '#home') {
+
+    if (href === '#' || !href) {
       e.preventDefault();
       window.scrollTo({
         top: 0,
@@ -182,7 +287,7 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
 
     if (targetElement) {
       e.preventDefault();
-      const offsetTop = targetElement.offsetTop - 80;
+      const offsetTop = targetElement.offsetTop - 70;
       window.scrollTo({
         top: offsetTop,
         behavior: 'smooth'
@@ -191,57 +296,32 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
   });
 });
 
-// ==========================================
-// Word Cloud Animation Enhancement
-// ==========================================
+// ===================================
+// Back to Top Button
+// ===================================
 
-const cloudWords = document.querySelectorAll('.cloud-word');
+const backToTop = document.getElementById('back-to-top');
 
-cloudWords.forEach(word => {
-  // Random animation delay
-  const delay = Math.random() * 4;
-  word.style.animationDelay = `-${delay}s`;
-
-  // Add interactive rotation on mouse move
-  word.addEventListener('mouseenter', function() {
-    this.style.transform = `scale(1.3) rotate(${Math.random() * 20 - 10}deg)`;
+if (backToTop) {
+  window.addEventListener('scroll', () => {
+    if (window.scrollY > 300) {
+      backToTop.classList.add('visible');
+    } else {
+      backToTop.classList.remove('visible');
+    }
   });
 
-  word.addEventListener('mouseleave', function() {
-    this.style.transform = '';
+  backToTop.addEventListener('click', () => {
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth'
+    });
   });
-});
-
-// Parallax effect for word cloud
-let mouseX = 0;
-let mouseY = 0;
-let targetX = 0;
-let targetY = 0;
-
-document.addEventListener('mousemove', (e) => {
-  mouseX = (e.clientX / window.innerWidth - 0.5) * 2;
-  mouseY = (e.clientY / window.innerHeight - 0.5) * 2;
-});
-
-function animateWordCloud() {
-  targetX += (mouseX - targetX) * 0.05;
-  targetY += (mouseY - targetY) * 0.05;
-
-  cloudWords.forEach((word, index) => {
-    const speed = (index % 3 + 1) * 10;
-    const x = targetX * speed;
-    const y = targetY * speed;
-    word.style.transform = `translate(${x}px, ${y}px)`;
-  });
-
-  requestAnimationFrame(animateWordCloud);
 }
 
-animateWordCloud();
-
-// ==========================================
-// Intersection Observer for Scroll Animations
-// ==========================================
+// ===================================
+// Scroll Animations
+// ===================================
 
 const observerOptions = {
   threshold: 0.1,
@@ -257,41 +337,17 @@ const observer = new IntersectionObserver((entries) => {
   });
 }, observerOptions);
 
-// Observe content sections
-document.querySelectorAll('.content-section').forEach(section => {
+// Observe sections
+document.querySelectorAll('.section').forEach(section => {
   section.style.opacity = '0';
   section.style.transform = 'translateY(30px)';
   section.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
   observer.observe(section);
 });
 
-// Observe timeline items
-document.querySelectorAll('.timeline-item').forEach((item, index) => {
-  item.style.opacity = '0';
-  item.style.transform = 'translateY(30px)';
-  item.style.transition = `opacity 0.6s ease ${index * 0.1}s, transform 0.6s ease ${index * 0.1}s`;
-  observer.observe(item);
-});
-
-// Observe experience cards
-document.querySelectorAll('.experience-card').forEach((card, index) => {
-  card.style.opacity = '0';
-  card.style.transform = 'translateY(30px)';
-  card.style.transition = `opacity 0.6s ease ${index * 0.15}s, transform 0.6s ease ${index * 0.15}s`;
-  observer.observe(card);
-});
-
-// Observe contact cards
-document.querySelectorAll('.contact-card').forEach((card, index) => {
-  card.style.opacity = '0';
-  card.style.transform = 'translateY(30px)';
-  card.style.transition = `opacity 0.6s ease ${index * 0.15}s, transform 0.6s ease ${index * 0.15}s`;
-  observer.observe(card);
-});
-
-// ==========================================
-// Active Navigation Link Highlight
-// ==========================================
+// ===================================
+// Active Navigation Highlight
+// ===================================
 
 const sections = document.querySelectorAll('section[id]');
 const navLinks = document.querySelectorAll('.navbar-menu a[href^="#"]');
@@ -310,35 +366,30 @@ window.addEventListener('scroll', () => {
   });
 
   navLinks.forEach(link => {
-    link.style.color = '';
+    link.classList.remove('is-active');
     const href = link.getAttribute('href');
     if (href === `#${current}`) {
-      link.style.color = 'var(--accent-orange)';
+      link.classList.add('is-active');
+      link.style.backgroundColor = 'rgba(255, 255, 255, 0.2)';
+    } else {
+      link.style.backgroundColor = '';
     }
   });
 });
 
-// ==========================================
-// Prevent FOUC (Flash of Unstyled Content)
-// ==========================================
-
-document.addEventListener('DOMContentLoaded', () => {
-  document.body.style.opacity = '1';
-});
-
-// ==========================================
+// ===================================
 // Console Easter Egg
-// ==========================================
+// ===================================
 
 console.log('%c👋 Hello there!', 'font-size: 20px; font-weight: bold; color: #ff6b3d;');
-console.log('%cLooking at the code? I like your curiosity!', 'font-size: 14px; color: #2e6bff;');
+console.log('%cWelcome to Junbo Huang\'s Portfolio', 'font-size: 14px; color: #2e6bff;');
 console.log('%cFeel free to reach out if you want to collaborate!', 'font-size: 12px; color: #666;');
 
-// ==========================================
-// Performance Optimization
-// ==========================================
+// ===================================
+// Performance Optimizations
+// ===================================
 
-// Debounce function for resize events
+// Debounce function
 function debounce(func, wait) {
   let timeout;
   return function executedFunction(...args) {
@@ -351,45 +402,10 @@ function debounce(func, wait) {
   };
 }
 
-// Optimize window resize handler
+// Optimize window resize
 window.addEventListener('resize', debounce(() => {
-  // Recalculate any layout-dependent features
-  console.log('Window resized');
+  // Restart word cloud on resize
+  if (typeof TagCanvas !== 'undefined') {
+    setTimeout(initWordCloud, 300);
+  }
 }, 250));
-
-// ==========================================
-// Accessibility Enhancements
-// ==========================================
-
-// Keyboard navigation for carousel
-document.addEventListener('keydown', (e) => {
-  if (e.key === 'ArrowLeft') {
-    prevCard();
-    resetAutoPlay();
-  } else if (e.key === 'ArrowRight') {
-    nextCard();
-    resetAutoPlay();
-  }
-});
-
-// Focus management for mobile menu
-navbarBurger.addEventListener('keydown', (e) => {
-  if (e.key === 'Enter' || e.key === ' ') {
-    e.preventDefault();
-    navbarBurger.click();
-  }
-});
-
-// Announce theme change to screen readers
-themeToggle.addEventListener('click', () => {
-  const announcement = document.createElement('div');
-  announcement.setAttribute('role', 'status');
-  announcement.setAttribute('aria-live', 'polite');
-  announcement.style.position = 'absolute';
-  announcement.style.left = '-9999px';
-  announcement.textContent = body.classList.contains('dark-mode')
-    ? 'Dark mode enabled'
-    : 'Light mode enabled';
-  document.body.appendChild(announcement);
-  setTimeout(() => announcement.remove(), 1000);
-});
